@@ -1,9 +1,9 @@
-local input_path = tostring(...):sub(1, -6)
+local _M, crequire, brequire = require("newmodule")(...)
+
 local Input = {}
 Input.__index = Input
 
-local mappings = love.filesystem.read(input_path .. 'gamecontrollerdb.txt')
-if love.joystick.loadGamepadMappings then love.joystick.loadGamepadMappings(mappings) end
+brequire("gamecontrollerdb")
 
 local all_keys = {
     "space", "return", "escape", "backspace", "tab", "space", "!", "\"", "#", "$", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", "0", "1", "2", "3", "4",
@@ -25,7 +25,6 @@ function Input.new()
     -- Previous and current key down state
     self.prev_state = {}
     self.state = {}
-
 
     -- self.binds[action] has a list of keys that correspond to this action
     self.binds = {}
@@ -83,7 +82,7 @@ function Input:down(action)
         if (love.keyboard.isDown(key) or love.mouse.isDown(key_to_button[key] or '')) then
             return true
         end
-        
+
         -- Supports only 1 gamepad, add more later...
         if self.joysticks[1] then
             if axis_to_button[key] then
@@ -147,7 +146,7 @@ local button_to_gamepad = {a = 'fdown', y = 'fup', x = 'fleft', b = 'fright', ba
                            dpup = 'dpup', dpdown = 'dpdown', dpleft = 'dpleft', dpright = 'dpright'}
 
 function Input:gamepadpressed(joystick, button)
-    self.state[button_to_gamepad[button]] = true 
+    self.state[button_to_gamepad[button]] = true
 end
 
 function Input:gamepadreleased(joystick, button)
@@ -160,4 +159,6 @@ function Input:gamepadaxis(joystick, axis, newvalue)
     self.state[button_to_axis[axis]] = newvalue
 end
 
-return setmetatable({new = new}, {__call = function(_, ...) return Input.new(...) end})
+_M.new = new
+
+return setmetatable(_M, {__call = function(_, ...) return Input.new(...) end})

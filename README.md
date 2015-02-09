@@ -1,19 +1,29 @@
-# Thomas
+# Love-Input
+
+Love-Input is a fork of [thomas/input.lua](https://github.com/adonaac/thomas).
 
 An input module for LÖVE. Simplifies input handling by abstracting them away to actions,
 enabling pressed/released checks outside of LÖVE's callbacks and taking care of gamepad input as well.
 
+# What's new
+
+ * init.lua done to be used directly from a copy of this repository.
+ * I use [newmodule](https://github.com/tst2005/lua-newmodule)
+ * A support for [lovemodular](https://github.com/tst2005/lovemodular) was done (see the [default.lua](https://github.com/tst2005/love-input/blob/master/default.lua))
+
 ## Usage
 
-The [module](https://github.com/adonaac/thomas/blob/master/Input.lua) and the 
-[gamecontrollerdb.txt](https://github.com/adonaac/thomas/blob/master/gamecontrollerdb.txt) files should be dropped 
-on your project and required like so:
+Copy or clone this repository.
+You load the main library you can required like so:
+
+### One way
 
 ```lua
-Input = require 'Input'
+local Input = require 'love-input'
 ```
 
 An object is returned and from that you can create multiple input objects.
+
 
 ### Creating an input object
 
@@ -59,6 +69,23 @@ function love.gamepadaxis(joystick, axis, value)
   input:gamepadaxis(joystick, axis, value)
 end
 ```
+
+### Second way
+
+You should also use [lovemodular](https://github.com/tst2005/lovemodular/)
+
+```lua
+local love_input_default = require 'love-input.default'
+require("lovemodular").register(love_input_default)
+local input = love_input_default()
+
+-- Your game stuff
+-- ...
+
+-- at the end of main.lua
+require("lovemodular").install() -- automatic setup of all love callbacks
+```
+
 
 ### Binding keys to actions
 
